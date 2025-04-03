@@ -55,7 +55,7 @@ public class GameEngineApp {
 
         // initialize the controller.GameController with the selected file path
         GameController controller = new GameController(jsonPath);
-        //controller.gameLoop();
+        controller.gameLoop();
       } else {
         System.out.println("Invalid selection. Exiting. Please restart the game");
       }
