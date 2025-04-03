@@ -52,7 +52,6 @@ public class GameController {
     createPlayer(playername);
     // create player by default here
     this.originalPath = pathname;
-    view.createAndShowGUI();
 
   }
 
