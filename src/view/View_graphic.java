@@ -13,7 +13,12 @@ public class View_graphic {
   private String[] inputs;
   private String playerName;
   JFrame frame; // the frame that we would use!!!!
+  private GameController controller;
 
+  public void setController(GameController controller) {
+    //for graphic mode
+    this.controller = controller;
+  }
 
   public String getPlayerName() {
     JPanel panel = new JPanel();
@@ -105,6 +110,7 @@ public class View_graphic {
     frame.add(mainPanel, BorderLayout.CENTER);
 
     northButton.addActionListener(e -> {
+      controller.getCommand(new String[]{"north", ""});
     });
 
     southButton.addActionListener(e -> {
