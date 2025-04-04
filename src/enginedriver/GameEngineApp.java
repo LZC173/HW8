@@ -54,7 +54,10 @@ public class GameEngineApp {
         String jsonPath = files[selectedIndex].getPath();
 
         // initialize the controller.GameController with the selected file path
-        GameController controller = new GameController(jsonPath);
+
+        String mode = "";//yijie
+
+        GameController controller = new GameController(jsonPath,mode);
         controller.gameLoop();
       } else {
         System.out.println("Invalid selection. Exiting. Please restart the game");
