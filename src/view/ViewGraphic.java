@@ -1,17 +1,11 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.nio.file.Paths;
-import java.util.Scanner;
 
 import javax.swing.*;
 
 import controller.GameController;
 public class ViewGraphic implements ViewParent {
-  private Scanner scanner;
-  private String[] inputs;
   private String playerName;
   JFrame frame; // the frame that we would use!!!!
   private GameController controller;
@@ -25,14 +19,14 @@ public class ViewGraphic implements ViewParent {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
 
-    JLabel label = new JLabel("===== Welcome to the Game! =====\nEnter your name:");
+    JLabel label = new JLabel("Enter a name for your Player Avatar:   ");
     JTextField textField = new JTextField(15);
 
     panel.add(label, BorderLayout.NORTH); // welcome message at upside
     panel.add(textField, BorderLayout.CENTER); // input message at middle
 
     int result = JOptionPane.showConfirmDialog(
-            null, panel, "Enter Name", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        null, panel, "Enter Name", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
     );
 
     if (result == JOptionPane.OK_OPTION) {
@@ -55,7 +49,7 @@ public class ViewGraphic implements ViewParent {
     //  String RoomImagePath = Paths.get(Resource, ""
     //            + Player_name + ".png").toString();
     if(type.equals("Room P")) {
-      String image = this.controller.getPlayer().getCurrentRoom().getPicture();
+      this.controller.getPlayer().getCurrentRoom().getPicture();
     }
     return "";
   }
@@ -93,18 +87,9 @@ public class ViewGraphic implements ViewParent {
     // text field input
     JTextField inputField = new JTextField();
 
-    //
-    JButton submitButton = new JButton("submit");
 
-    //
-    JPanel inputPanel = new JPanel(new BorderLayout());
-    inputPanel.add(inputField, BorderLayout.CENTER);
-    inputPanel.add(submitButton, BorderLayout.EAST);
-    frame.add(inputPanel, BorderLayout.SOUTH);
 
-    submitButton.addActionListener(e -> {
-      String text = inputField.getText().trim();
-    });
+
 
 
     // split the panel in to 4 part
@@ -115,20 +100,36 @@ public class ViewGraphic implements ViewParent {
     JPanel bottomRightPanel = new JPanel();
 
 
-    JButton northButton = new JButton("North");
-    JButton southButton = new JButton("South");
-    JButton eastButton = new JButton("East");
-    JButton westButton = new JButton("West");
+    // Load direction button icons (from resources folder)
+    ImageIcon northIcon = resizeIcon("resources/resources/images/north.png", 40, 40);
+    ImageIcon southIcon = resizeIcon("resources/resources/images/south.png", 40, 40);
+    ImageIcon eastIcon = resizeIcon("resources/resources/images/east.png", 40, 40);
+    ImageIcon westIcon = resizeIcon("resources/resources/images/west.png", 40, 40);
 
+    JButton northButton = new JButton(northIcon);
+    JButton southButton = new JButton(southIcon);
+    JButton eastButton = new JButton(eastIcon);
+    JButton westButton = new JButton(westIcon);
+
+    // remove borders and background for image-only buttons
+    JButton[] buttons = { northButton, southButton, eastButton, westButton };
+    for (JButton button : buttons) {
+      button.setBorderPainted(false);
+      button.setContentAreaFilled(false);
+      button.setFocusPainted(false);
+    }
 
     //make a directional panel
-    JPanel directionPanel = new JPanel(new GridLayout(2, 3));
+    JPanel directionPanel = new JPanel(new GridLayout(3, 3));
     directionPanel.add(new JLabel());
     directionPanel.add(northButton);
     directionPanel.add(new JLabel());
     directionPanel.add(westButton);
-    directionPanel.add(southButton);
+    directionPanel.add(new JLabel());
     directionPanel.add(eastButton);
+    directionPanel.add(new JLabel());
+    directionPanel.add(southButton);
+    directionPanel.add(new JLabel());
 
 
     topRightPanel.setLayout(new BorderLayout());
@@ -169,18 +170,16 @@ public class ViewGraphic implements ViewParent {
 //    });
 
 
-
     frame.setVisible(true);// only at last row
   }
-  // Try GUI
 
-//  //helper
-//  String  helper(){
-//    create panel,
-//    create button,
-//    returb "hair clipper"
-//  }
-
+  // helper method for resizing icons
+  private ImageIcon resizeIcon(String path, int width, int height) {
+    ImageIcon icon = new ImageIcon(path);
+    Image img = icon.getImage();
+    Image resized = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+    return new ImageIcon(resized);
+  }
 
 
   /**
