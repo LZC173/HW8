@@ -20,6 +20,7 @@ import model.Puzzle;
 import model.Room;
 import view.View;
 import view.ViewGraphic;
+import view.ViewParent;
 
 
 /**
@@ -30,8 +31,7 @@ import view.ViewGraphic;
 public class GameController {
   private Map map;
   private Player player;
-  private View view;
-  private ViewGraphic ViewGraphic;
+  private ViewParent view;
   private static final String SAVE_DIRECTORY = "save"; // relative path for saving
   private String originalPath;
 
@@ -43,22 +43,18 @@ public class GameController {
    */
   public GameController(String pathname,String Mode) throws IOException {
     String gameFile = Paths.get(pathname).toString();
-
-
     this.map = LoadGameData.loadMap(gameFile);
-
-    String playername = view.getPlayerName();
-    createPlayer(playername);
     // create player by default here
     this.originalPath = pathname;
 
-    if(Mode == "Text"){
+    if ("Text".equals(Mode)){
       this.view = new View();
     }
-    if(Mode == "Graphic"){
-      this.ViewGraphic = new ViewGraphic();
+    if ("Graphic".equals(Mode)){
+      this.view = new ViewGraphic();
     }
-
+    String playername = view.getPlayerName();
+    createPlayer(playername);
   }
 
 
@@ -687,8 +683,18 @@ public class GameController {
    */
   public void gameLoop() {
     boolean gameOver = false;
-    while (!gameOver) {
+
+    // show only one
+    if (view instanceof ViewGraphic) {
       view.displayMenu();
+    }
+
+    while (!gameOver) {
+      // show many times
+      if (!(view instanceof ViewGraphic)) {
+        view.displayMenu();
+      }
+
       String[] command = view.getInput();
       getCommand(command);
     }
