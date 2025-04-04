@@ -81,9 +81,6 @@ public class ViewGraphic {
 
 
   public void createAndShowGUI() {
-
-
-
     JFrame frame = new JFrame("Game Window");
     frame.setSize(1000, 1000);
 
