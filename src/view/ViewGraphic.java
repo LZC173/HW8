@@ -1,15 +1,12 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 import javax.swing.*;
 
 import controller.GameController;
-public class ViewGraphic extends ViewParent {
+public class ViewGraphic implements ViewParent {
   private Scanner scanner;
   private String[] inputs;
   private String playerName;
@@ -79,10 +76,8 @@ public class ViewGraphic extends ViewParent {
     //渲染图片
   }
 
-
-  public void createAndShowGUI() {
-
-
+  @Override
+  public void displayMenu() {
 
     JFrame frame = new JFrame("Game Window");
     frame.setSize(1000, 1000);
@@ -188,9 +183,20 @@ public class ViewGraphic extends ViewParent {
    */
   public void displayMessage(String message) {
     ///item,
-
-
   }
+
+
+
+
+  @Override
+
+  public String[] getInput() {
+
+    String action =""; // get action
+    String item = ""; // get item if any
+    return new String[]{action, item};
+  }
+
   //
 
 }
