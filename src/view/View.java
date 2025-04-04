@@ -81,6 +81,11 @@ public class View implements ViewParent {
     return new String[]{action, item};
   }
 
+  @Override
+  public void setController(GameController controller) {
+    return;
+  }
+
 
   /**
    * print out the message of the result of player action.

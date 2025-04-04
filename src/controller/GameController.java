@@ -52,6 +52,7 @@ public class GameController {
     }
     if ("Graphic".equals(Mode)){
       this.view = new ViewGraphic();
+      view.setController(this); 
     }
     String playername = view.getPlayerName();
     createPlayer(playername);
