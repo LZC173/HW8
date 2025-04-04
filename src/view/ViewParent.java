@@ -1,4 +1,7 @@
 package view;
-
-public class ViewParent {
+public interface ViewParent {
+  String getPlayerName();
+  void displayMessage(String message);
+  void displayMenu();
+  String[] getInput();
 }

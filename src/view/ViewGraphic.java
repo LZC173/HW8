@@ -9,7 +9,7 @@ import java.util.Scanner;
 import javax.swing.*;
 
 import controller.GameController;
-public class ViewGraphic extends ViewParent {
+public class ViewGraphic implements ViewParent {
   private Scanner scanner;
   private String[] inputs;
   private String playerName;
@@ -81,6 +81,9 @@ public class ViewGraphic extends ViewParent {
 
 
   public void createAndShowGUI() {
+
+
+
     JFrame frame = new JFrame("Game Window");
     frame.setSize(1000, 1000);
 
@@ -152,11 +155,10 @@ public class ViewGraphic extends ViewParent {
     });
 
     eastButton.addActionListener(e -> {
-      controller.getCommand(new String[]{"east", ""});
+
     });
 
     westButton.addActionListener(e -> {
-      controller.getCommand(new String[]{"west", ""});
     });
 
 //    examine Button.addActionListener(e -> {
