@@ -41,7 +41,7 @@ public class GameController {
    * @param pathname path to the game data file.
    * @throws IOException if an error occurs while reading the file.
    */
-  public GameController(String pathname,String Mode) throws IOException {
+  public GameController(String pathname, String mode) throws IOException {
     String gameFile = Paths.get(pathname).toString();
 
 
@@ -52,10 +52,12 @@ public class GameController {
     // create player by default here
     this.originalPath = pathname;
 
-    if(Mode == "Text"){
+    // standard input
+    mode = mode.toLowerCase();
+    if(mode == "text"){
       this.view = new View();
     }
-    if(Mode == "Graphic"){
+    if(mode == "graphic"){
       this.ViewGraphic = new ViewGraphic();
     }
 
