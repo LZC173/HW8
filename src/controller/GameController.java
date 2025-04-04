@@ -685,13 +685,15 @@ public class GameController {
    * While the game is not over, continue to fetch command from user input.
    */
   public void gameLoop() {
-    boolean gameOver = false;
 
-    // show only one
+    // Graphic mode
     if (view instanceof ViewGraphic) {
-      view.displayMenu();
+      ((ViewGraphic) view).createAndShowGUI();
+      return;
     }
 
+    // Test mode
+    boolean gameOver = false;
     while (!gameOver) {
       // show many times
       if (!(view instanceof ViewGraphic)) {
