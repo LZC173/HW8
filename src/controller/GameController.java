@@ -19,6 +19,8 @@ import model.Player;
 import model.Puzzle;
 import model.Room;
 import view.View;
+import view.ViewGraphic;
+
 
 /**
  * The GameController class which manages the game's functionality.
@@ -29,6 +31,7 @@ public class GameController {
   private Map map;
   private Player player;
   private View view;
+  private ViewGraphic ViewGraphic;
   private static final String SAVE_DIRECTORY = "save"; // relative path for saving
   private String originalPath;
 
@@ -38,156 +41,27 @@ public class GameController {
    * @param pathname path to the game data file.
    * @throws IOException if an error occurs while reading the file.
    */
-  public GameController(String pathname) throws IOException {
-    ObjectMapper objectMapper = new ObjectMapper();
-    GameData gameData = objectMapper.readValue(new File(pathname), GameData.class);
+  public GameController(String pathname,String Mode) throws IOException {
+    String gameFile = Paths.get(pathname).toString();
 
-    JsonNode rootNode = objectMapper.readTree(Files.readString(new File(pathname).toPath()));
-    JsonNode roomsNode = rootNode.get("rooms");
 
-    List<Room> roomList = parseRooms(roomsNode, gameData);
-    this.map = new Map(roomList, gameData.getName(), gameData.getVersion());
-    this.view = new View();
+    this.map = LoadGameData.loadMap(gameFile);
+
     String playername = view.getPlayerName();
     createPlayer(playername);
     // create player by default here
     this.originalPath = pathname;
 
+    if(Mode == "Text"){
+      this.view = new View();
+    }
+    if(Mode == "Graphic"){
+      this.ViewGraphic = new ViewGraphic();
+    }
+
   }
 
-  /**
-   * Parses a JSON array of room data and creates a list of Room objects.
-   *
-   * @param roomsNode the JSON node represents an array of rooms
-   * @param gameData the game data used for constructing each Room object
-   * @return a list of Room objects parsed from the given JSON node
-   */
-  private List<Room> parseRooms(JsonNode roomsNode, GameData gameData) {
-    List<Room> roomList = new ArrayList<>();
-    for (JsonNode roomNode : roomsNode) {
-      Room room = createRoom(roomNode, gameData);
-      roomList.add(room);
-    }
-    return roomList;
-  }
 
-  /**
-   * Creates a Room object from the JSON data.
-   *
-   * @param roomNode JSON node with the room details.
-   * @param gameData reference to game data for related objects.
-   * @return a Room object.
-   */
-  private Room createRoom(JsonNode roomNode, GameData gameData) {
-    // Each roomNode is passed to createRoom() along with gameData to construct a Room object.
-    Puzzle puzzle = new Puzzle();
-    if (gameData.getPuzzles() != null) {
-      puzzle = findPuzzle(roomNode.get("puzzle").asText(null), gameData);
-    }
-    Monster monster = new Monster();
-    if (gameData.getMonsters() != null) {
-      monster = findMonster(roomNode.get("monster").asText(null), gameData);
-    }
-    List<Item> roomItems = new ArrayList<>();
-    if (gameData.getItems() != null) {
-      roomItems = findItems(roomNode.get("items").asText(null), gameData);
-    }
-    List<Fixture> roomFixtures = new ArrayList<>();
-    if (gameData.getFixtures() != null) {
-      roomFixtures = findFixtures(roomNode.get("fixtures").asText(null), gameData);
-    }
-    String picture = "";
-    if (roomNode.get("picture") != null) {
-      picture = roomNode.get("picture").asText();
-    }
-    String name = roomNode.get("room_name").asText();
-    int number = roomNode.get("room_number").asInt();
-    String description = roomNode.get("description").asText();
-    int n = roomNode.get("N").asInt();
-    int s = roomNode.get("S").asInt();
-    int e = roomNode.get("E").asInt();
-    int w = roomNode.get("W").asInt();
-    return new Room(name, number, description, n, s, e, w,
-            puzzle, monster, roomItems, roomFixtures, picture);
-  }
-
-  /**
-   * Finds a Puzzle object in the game data by its name.
-   *
-   * @param puzzleName the name of the puzzle to find
-   * @param gameData the game data contains all puzzles
-   * @return the Puzzle object with the matching name, or null if not found or input is null
-   */
-  private Puzzle findPuzzle(String puzzleName, GameData gameData) {
-    if (puzzleName == null) {
-      return null;
-    }
-    return gameData.puzzles.stream()
-            .filter(p -> p.getName().equalsIgnoreCase(puzzleName))
-            .findFirst()
-            .orElse(null);
-  }
-
-  /**
-   * Finds a Monster object in the game data by its name.
-   *
-   * @param monsterName the name of the monster
-   * @param gameData the game data contains all monsters
-   * @return the Monster object with the matching name, or null if not found or input is null
-   */
-  private Monster findMonster(String monsterName, GameData gameData) {
-    if (monsterName == null) {
-      return null;
-    }
-    return gameData.monsters.stream()
-            .filter(m -> m.getName().equalsIgnoreCase(monsterName))
-            .findFirst()
-            .orElse(null);
-  }
-
-  /**
-   * Finds multiple Item objects in the game data based on a comma-separated string of item names.
-   *
-   * @param itemNames item names
-   * @param gameData the game data contains all items
-   * @return a list of Item objects that match the provided name
-   */
-  private List<Item> findItems(String itemNames, GameData gameData) {
-    List<Item> roomItems = new ArrayList<>();
-    if (itemNames == null) {
-      return roomItems;
-    }
-
-    for (String itemName : itemNames.split(",")) {
-      gameData.items.stream()
-              .filter(item -> item.getName().equalsIgnoreCase(itemName.trim()))
-              .findFirst()
-              .ifPresent(roomItems::add);
-    }
-    return roomItems;
-  }
-
-  /**
-   * Finds multiple Fixture objects in the game data based on a fixture names.
-   *
-   * @param fixtureNames fixture names
-   * @param gameData the game data contains all fixtures
-   * @return a list of Fixture objects that match the provided names;
-   */
-  private List<Fixture> findFixtures(String fixtureNames, GameData gameData) {
-    List<Fixture> roomFixtures = new ArrayList<>();
-    if (fixtureNames == null) {
-      return roomFixtures;
-    }
-
-    for (String fixtureName : fixtureNames.split(",")) {
-      gameData.fixtures.stream()
-              .filter(fixture -> fixture.getName().equalsIgnoreCase(fixtureName.trim()))
-              .findFirst()
-              .ifPresent(roomFixtures::add);
-    }
-    return roomFixtures;
-  }
 
   /**
    * Constructor helper method, create a player for base setting.
@@ -670,37 +544,37 @@ public class GameController {
     }
 
     switch (action) {
-      case "n", "north", "s", "south", "e", "east", "w", "west":
+      case "n", "north", "s", "south", "e", "east", "w", "west": // the neal
         movePlayer(action);
         break;
-      case "i", "inventory":
+      case "i", "inventory":  // AMY,inspect(),dont' delete inventory but add inspect()
         showInventory();
         break;
-      case "t", "take":
+      case "t", "take": // Amy
         takeItem(stuff);
         break;
-      case "d", "drop":
+      case "d", "drop": // AMy
         dropItem(stuff);
         break;
-      case "x", "examine":
+      case "x", "examine": // Amy
         examine(stuff);
         break;
-      case "l", "look":
+      case "l", "look"://no longer need for graphic but need for text mode
         lookAround();
         break;
-      case "u", "use":
+      case "u", "use": //  Yijie
         handleUseCommand(stuff);
         break;
-      case "a", "answer":
+      case "a", "answer": //Neal
         handleAnswerCommand(stuff);
         break;
-      case "q", "quit":
+      case "q", "quit": //neal
         quit();
         break;
-      case "save":
+      case "save": //neal
         saveGame();
         break;
-      case "load":
+      case "load": //neal
         loadGame();
         break;
       default:
@@ -820,7 +694,33 @@ public class GameController {
     }
   }
 
+  public Player getPlayer() {
+    return player;
+  }
 
 
+
+  // amy
+  public List<String> renderInventory() {
+    List<Item> inventory = player.getInventory();
+
+    String inventoryMessage;
+    if (inventory.isEmpty()) {
+      inventoryMessage = "There's nothing in your inventory yet.";
+    } else {
+      StringBuilder sb = new StringBuilder();
+      for (Iterator<Item> it = inventory.iterator(); it.hasNext(); ) {
+        Item item = it.next();
+        sb.append(item.getName());
+        if (it.hasNext()) {
+          sb.append(", ");
+        }
+      }
+      inventoryMessage = "Items in your inventory: " + sb.toString();
+    }
+
+    return null;
+    }
 
 }
+
