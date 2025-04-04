@@ -150,10 +150,12 @@ public class ViewGraphic implements ViewParent {
     });
 
     eastButton.addActionListener(e -> {
+      controller.getCommand(new String[]{"east", ""});
 
     });
 
     westButton.addActionListener(e -> {
+      controller.getCommand(new String[]{"west", ""});
     });
 
 //    examine Button.addActionListener(e -> {
