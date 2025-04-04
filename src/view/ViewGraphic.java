@@ -190,8 +190,18 @@ public class ViewGraphic implements ViewParent {
    */
   public void displayMessage(String message) {
     ///item,
+    System.out.println(message);
 
+  }
 
+  @Override
+  public void displayMenu() {
+
+  }
+
+  @Override
+  public String[] getInput() {
+    return new String[0];
   }
   //
 
