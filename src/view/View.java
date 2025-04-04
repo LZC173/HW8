@@ -12,7 +12,7 @@ import controller.GameController;
 /**
  * Class representation of view class which handles user interactions.
  */
-public class View {
+public class View extends ViewParent {
   private Scanner scanner;
   private String[] inputs;
   private String playerName;

@@ -9,7 +9,7 @@ import java.util.Scanner;
 import javax.swing.*;
 
 import controller.GameController;
-public class ViewGraphic {
+public class ViewGraphic extends ViewParent {
   private Scanner scanner;
   private String[] inputs;
   private String playerName;
@@ -152,11 +152,10 @@ public class ViewGraphic {
     });
 
     eastButton.addActionListener(e -> {
-      controller.getCommand(new String[]{"east", ""});
+
     });
 
     westButton.addActionListener(e -> {
-      controller.getCommand(new String[]{"west", ""});
     });
 
 //    examine Button.addActionListener(e -> {
