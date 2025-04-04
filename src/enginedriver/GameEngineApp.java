@@ -55,7 +55,7 @@ public class GameEngineApp {
 
         // initialize the controller.GameController with the selected file path
 
-        String mode = "";//yijie
+        String mode = "Graphic";//yijie
 
         GameController controller = new GameController(jsonPath,mode);
         controller.gameLoop();
