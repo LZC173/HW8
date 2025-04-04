@@ -41,19 +41,21 @@ public class GameController {
    * @param pathname path to the game data file.
    * @throws IOException if an error occurs while reading the file.
    */
-  public GameController(String pathname,String Mode) throws IOException {
+  public GameController(String pathname,String mode) throws IOException {
     String gameFile = Paths.get(pathname).toString();
     this.map = LoadGameData.loadMap(gameFile);
     // create player by default here
     this.originalPath = pathname;
+    mode = mode.toLowerCase();
 
-    if ("Text".equals(Mode)){
+    if ("text".equals(mode)){
       this.view = new View();
     }
-    if ("Graphic".equals(Mode)){
+    if ("graphic".equals(mode)){
       this.view = new ViewGraphic();
       view.setController(this); 
     }
+
     String playername = view.getPlayerName();
     createPlayer(playername);
   }
